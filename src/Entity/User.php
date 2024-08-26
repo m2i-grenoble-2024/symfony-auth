@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Entity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 
-class User {
+class User implements UserInterface, PasswordAuthenticatedUserInterface {
     private ?int $id;
     private ?string $email;
     private ?string $password;
@@ -55,5 +57,13 @@ class User {
         $this->role = $role;
 
         return $this;
+    }
+
+    public function getRoles(): array {
+        return [$this->role];
+    }
+    public function eraseCredentials(): void{}
+    public function getUserIdentifier(): string {
+        return $this->email;
     }
 }
