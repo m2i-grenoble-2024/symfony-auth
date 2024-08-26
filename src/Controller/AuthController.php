@@ -38,6 +38,12 @@ class AuthController extends AbstractController {
             return $this->json($user, 201);
 
     }
+
+    #[Route('/api/secret', methods: 'GET')]
+    public function secret() {
+        return $this->json('it is a secret to everyone');
+    }
+
     //Exemple de ce que va faire la library JWT lorsqu'on se connecte et qu'on génère un token
     // Attention : Ne pas forcément utiliser car la library le fait déjà en plus paramètrable
     // #[Route('/api/login', methods: 'POST')]
