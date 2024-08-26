@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class AuthController extends AbstractController {
 
@@ -17,6 +18,7 @@ class AuthController extends AbstractController {
     public function register(
         #[MapRequestPayload] User $user,
         UserPasswordHasherInterface $hasher){
+
             //On vérifie s'il y a déjà un user avec ce meme email
             if($this->repo->findByEmail($user->getEmail()) != null){
                 //Si oui, on arrête là, et on envoie une erreur
@@ -34,4 +36,5 @@ class AuthController extends AbstractController {
             return $this->json($user, 201);
 
     }
+    
 }
