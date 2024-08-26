@@ -28,6 +28,7 @@ class UserRepository {
             $user->setEmail($line['email']);
             $user->setPassword($line['password']);
             $user->setRole($line['role']);
+            return $user;
         }
         return null;
     }

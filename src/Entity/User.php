@@ -6,10 +6,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
-    private ?int $id;
-    private ?string $email;
-    private ?string $password;
-    private ?string $role;
+    private ?int $id = null;
+    private ?string $email = null;
+    private ?string $password = null;
+    private ?string $role = null;
 
     public function getId(): ?int
     {
