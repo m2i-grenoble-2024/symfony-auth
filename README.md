@@ -12,7 +12,7 @@ Projet dans lequel on utilise Symfony Security et le Lexik JWT Bundle pour crée
 1. Envoyer une requête POST vers http://localhost:8000/api/login avec comme body :
 ```json
 {
-    "username":"test@test.com",
+    "email":"test@test.com",
     "password": "1234"
 }
 ```
@@ -133,7 +133,7 @@ security:
     # ...
     providers:
         user_provider:
-            id: App\Security\UserProvider
+            id: App\Service\UserProvider
 ```
 
 ### Route d'inscription
