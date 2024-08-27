@@ -4,44 +4,54 @@
 namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-class AuthController extends AbstractController {
+class AuthController extends AbstractController
+{
 
-    public function __construct(private UserRepository $repo){}
+    public function __construct(private UserRepository $repo)
+    {
+    }
 
-    #[Route('/api/user', methods:'POST')]
+    #[Route('/api/user', methods: 'POST')]
     public function register(
         #[MapRequestPayload] User $user,
-        UserPasswordHasherInterface $hasher){
+        UserPasswordHasherInterface $hasher
+    ) {
 
-            //On vérifie s'il y a déjà un user avec ce meme email
-            if($this->repo->findByEmail($user->getEmail()) != null){
-                //Si oui, on arrête là, et on envoie une erreur
-                return $this->json('User already exists', 400);
-            }
-            //On hash le mot de passe en utilisant l'algorithme défini dans le security.yaml
-            $hashedPassword = $hasher->hashPassword($user, $user->getPassword());
-            //On assigne au user le mot de passe hashé pour le stocker
-            $user->setPassword($hashedPassword);
-            //On assigne un role par défaut à notre user
-            $user->setRole('ROLE_USER');
-            //On fait persister le user dans la bdd
-            $this->repo->persist($user);
-            //On renvoie une réponse de succés
-            return $this->json($user, 201);
+        //On vérifie s'il y a déjà un user avec ce meme email
+        if ($this->repo->findByEmail($user->getEmail()) != null) {
+            //Si oui, on arrête là, et on envoie une erreur
+            return $this->json('User already exists', 400);
+        }
+        //On hash le mot de passe en utilisant l'algorithme défini dans le security.yaml
+        $hashedPassword = $hasher->hashPassword($user, $user->getPassword());
+        //On assigne au user le mot de passe hashé pour le stocker
+        $user->setPassword($hashedPassword);
+        //On assigne un role par défaut à notre user
+        $user->setRole('ROLE_USER');
+        //On fait persister le user dans la bdd
+        $this->repo->persist($user);
+        //On renvoie une réponse de succés
+        return $this->json($user, 201);
 
     }
 
     #[Route('/api/secret', methods: 'GET')]
-    public function secret() {
+    public function secret()
+    {
         return $this->json('it is a secret to everyone');
+    }
+
+    #[Route('/api/user', methods:'GET')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')] //Annotation permettant de protéger une route. IS_AUTHENTICATED_FULLY indique qu'il faut être connecté, mais peu importe le rôle
+    public function connectedUser() {
+        //le $this->getUser() permet de récupérer le user actuellement connecté (il y aura dedans le résultat de notre findByEmail en l'occurrence)
+        return $this->json($this->getUser());
     }
 
     //Exemple de ce que va faire la library JWT lorsqu'on se connecte et qu'on génère un token
