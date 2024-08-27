@@ -3,11 +3,19 @@
 namespace App\Entity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
     private ?int $id = null;
+    #[Email]
+    #[NotBlank]
     private ?string $email = null;
+    #[NotBlank]
+    // #[PasswordStrength] //annotation qui vérifie que le mot de passe est pas pourri, par défaut c'est sur une strength medium
     private ?string $password = null;
     private ?string $role = null;
 
@@ -35,6 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this;
     }
 
+    #[Ignore] //Pour en faire sorte de ne pas envoyer le mot de passe en JSON mais de pouvoir quand même le récupérer des POST/PATCH/PUT
     public function getPassword(): ?string
     {
         return $this->password;
