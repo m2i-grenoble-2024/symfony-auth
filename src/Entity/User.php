@@ -43,7 +43,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this;
     }
 
-    #[Ignore] //Pour en faire sorte de ne pas envoyer le mot de passe en JSON mais de pouvoir quand même le récupérer des POST/PATCH/PUT
     public function getPassword(): ?string
     {
         return $this->password;
