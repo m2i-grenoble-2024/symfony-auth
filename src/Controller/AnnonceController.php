@@ -24,4 +24,18 @@ class AnnonceController extends AbstractController {
             $this->repo->findAll()
         );
     }
+
+    #[Route('/{id}', methods:'DELETE')]
+    public function remove(int $id) {
+        $user = $this->getUser();
+        $annonce = $this->repo->findById($id);
+        if(!$annonce) {
+            return $this->json('Annonce not found', 404);
+        }
+        if($annonce->getUser()->getId() != $user->getId()) {
+            return $this->json('Unauthorized', 403);
+        }
+        $this->repo->remove($id);
+        return $this->json(null, 204);
+    }
 }
