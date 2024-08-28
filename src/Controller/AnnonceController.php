@@ -18,4 +18,10 @@ class AnnonceController extends AbstractController {
         return $this->json($annonce, 201);
     }
     
+    #[Route(methods:'GET')]
+    public function all() {
+        return $this->json(
+            $this->repo->findAll()
+        );
+    }
 }
