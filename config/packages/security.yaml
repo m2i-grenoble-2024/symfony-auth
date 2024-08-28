@@ -36,6 +36,8 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/api/secret, roles: ROLE_USER }
+        - {path: ^/api/annonce, methods: [GET], roles: PUBLIC_ACCESS} #les méthodes GET des annonces sont accessibles à tout le monde
+        - {path: ^/api/annonce, roles: IS_AUTHENTICATED_FULLY} #les méthodes POST/PUT/DELETE/PATCH ne sont accessibles qu'aux personnes connectées
 
 when@test:
     security:
